@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ورقة عمل (10) - حذف البيانات</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #fce4ec; 
+            padding: 20px; 
+            color: #333;
+        }
+        .container { 
+            max-width: 900px; 
+            margin: auto; 
+            background: #ffffff; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
+            border: 3px solid #f48fb1;
+        }
+        h1 { color: #d81b60; text-align: center; }
+        h2, h3 { color: #880e4f; }
+        .student-info { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 25px; 
+            background-color: #f8bbd0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .student-info input { 
+            padding: 10px; 
+            font-size: 16px; 
+            border: 1px solid #f48fb1; 
+            border-radius: 5px; 
+            width: 45%; 
+            outline: none;
+        }
+        .student-info input:focus {
+            border-color: #d81b60;
+            box-shadow: 0 0 5px #f48fb1;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 20px; 
+            text-align: left; 
+            direction: ltr; 
+            background-color: #fff;
+        }
+        th, td { 
+            padding: 12px; 
+            border: 2px solid #f8bbd0; 
+            text-align: center; 
+        }
+        th { background-color: #f06292; color: white; font-size: 1.1em; }
+        tr:nth-child(even) { background-color: #fce4ec; }
+        .highlight-delete { background-color: #ff5252 !important; color: white; font-weight: bold; }
+        .editor-container {
+            background-color: #2b2b2b;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .editor-header {
+            background-color: #3c3f41;
+            color: #a9b7c6;
+            padding: 5px 10px;
+            font-family: sans-serif;
+            font-size: 14px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin: -10px -10px 10px -10px;
+            border-bottom: 1px solid #1e1e1e;
+        }
+        .editor { 
+            background-color: #2b2b2b; 
+            color: #a9b7c6; 
+            font-family: 'Consolas', 'Courier New', Courier, monospace; 
+            width: 100%; 
+            height: 280px; 
+            border: none; 
+            font-size: 16px; 
+            direction: ltr; 
+            text-align: left; 
+            outline: none;
+            resize: vertical;
+        }
+        .btn { 
+            background-color: #ec407a; 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            font-size: 16px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: 0.3s;
+            margin-left: 10px;
+        }
+        .btn:hover { background-color: #d81b60; transform: scale(1.05); }
+        .btn-print { background-color: #42a5f5; }
+        .btn-print:hover { background-color: #1e88e5; }
+        #result-section { 
+            display: none; 
+            margin-top: 30px; 
+            padding: 20px; 
+            border: 3px dashed #66bb6a; 
+            border-radius: 10px; 
+            background-color: #e8f5e9;
+        }
+        .success-msg { color: #2e7d32; font-size: 1.2em; font-weight: bold; }
+        
+        @media print {
+            .btn { display: none; }
+            body { background-color: white; }
+            .container { border: none; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ ورقة عمل (10) - حذف البيانات ✨</h1>
+        <h2>قاعدة بيانات المعالم الكويتية (Kuwait_landmarks.db)</h2>
+        
+        <div class="student-info">
+            <input type="text" id="studentName" placeholder="🌸 اسم المتعلمة 🌸">
+            <input type="text" id="studentClass" placeholder="📚 الصف 📚">
+        </div>
+
+        <h3>🔍 جدول المعالم (قبل عملية الحذف)</h3>
+        <p>الصفوف المظللة باللون <span style="color:#d32f2f; font-weight:bold;">الأحمر</span> توضح معالم الكويت الثقافية (category = 'Cultural') والمطلوب حذفها من الجدول.</p>
+        <table>
+            <tr><th>id</th><th>name</th><th>location</th><th>category</th><th>year</th><th>price</th></tr>
+            <tr><td>1</td><td>Al-Tahrir Tower</td><td>Central Kuwait</td><td>Architecture</td><td>1996</td><td>2.0</td></tr>
+            <tr><td>2</td><td>Kuwait National Museum</td><td>Al-Murqab Area</td><td>Historical</td><td>1983</td><td>0.0</td></tr>
+            <tr><td>3</td><td>The Avenues Mall</td><td>Al-Rai Area</td><td>Shopping</td><td>2007</td><td>0.0</td></tr>
+            <tr><td>4</td><td>Failaka Island</td><td>Off the coast</td><td>Historical</td><td>1950</td><td>0.0</td></tr>
+            <tr><td>5</td><td>Souq Al-Mubarakiya</td><td>Central Kuwait</td><td>Traditional</td><td>1897</td><td>0.0</td></tr>
+            <tr><td>6</td><td>Sheikh Jaber Bridge</td><td>Kuwait City</td><td>Modern</td><td>2019</td><td>0.0</td></tr>
+            <tr class="highlight-delete"><td>7</td><td>National Library</td><td>Al-Murqab Area</td><td>Cultural</td><td>1994</td><td>0.0</td></tr>
+            <tr><td>8</td><td>Museum of Modern Art</td><td>Salmiya Area</td><td>Art</td><td>1980</td><td>1.0</td></tr>
+            <tr class="highlight-delete"><td>9</td><td>Cultural Center</td><td>Kuwait City</td><td>Cultural</td><td>2016</td><td>0.0</td></tr>
+            <tr><td>10</td><td>Grand Mosque</td><td>Kuwait City</td><td>Religious</td><td>1986</td><td>0.0</td></tr>
+        </table>
+
+        <h3>💻 منطقة البرمجة (محاكي PyCharm)</h3>
+        <p>عزيزتي المتعلمة، أكملي التعليمات البرمجية التالية لحذف جميع صفوف معالم الكويت الثقافية:</p>
+        
+        <div class="editor-container">
+            <div class="editor-header">data_delete1.py</div>
+            <textarea id="codeEditor" class="editor" dir="ltr" spellcheck="false">
+import sqlite3
+
+# Connect to the database
+connection = sqlite3.connect('Kuwait_landmarks.db')
+cursor = connection.cursor()
+
+# Delete Data 
+# اكتبي تعليمة الحذف بين علامات الاقتباس الثلاثية
+cursor.execute('''
+
+''')
+
+print('Number of rows deleted:', connection.total_changes)
+
+# Commit changes
+connection.commit()
+
+# Close database
+connection.close()</textarea>
+        </div>
+        
+        <button class="btn" onclick="runCode()">▶ تشغيل التعليمات البرمجية</button>
+        <button class="btn btn-print" onclick="window.print()">🖨 حفظ الحل كملف PDF</button>
+        <a id="emailLink" class="btn" style="display:none; text-decoration:none; background-color:#ffb300; color:#fff; text-align:center; padding:12px 25px; border-radius:8px; font-weight:bold;" href="#">✉ إرسال الحل بالبريد</a>
+
+        <div id="result-section">
+            <p class="success-msg">✅ نتيجة التنفيذ: عدد الصفوف التي تم حذفها = 2</p>
+            <h3>📊 جدول المعالم (أثر عملية الحذف - الجدول الجديد)</h3>
+            <table>
+                <tr><th>id</th><th>name</th><th>location</th><th>category</th><th>year</th><th>price</th></tr>
+                <tr><td>1</td><td>Al-Tahrir Tower</td><td>Central Kuwait</td><td>Architecture</td><td>1996</td><td>2.0</td></tr>
+                <tr><td>2</td><td>Kuwait National Museum</td><td>Al-Murqab Area</td><td>Historical</td><td>1983</td><td>0.0</td></tr>
+                <tr><td>3</td><td>The Avenues Mall</td><td>Al-Rai Area</td><td>Shopping</td><td>2007</td><td>0.0</td></tr>
+                <tr><td>4</td><td>Failaka Island</td><td>Off the coast</td><td>Historical</td><td>1950</td><td>0.0</td></tr>
+                <tr><td>5</td><td>Souq Al-Mubarakiya</td><td>Central Kuwait</td><td>Traditional</td><td>1897</td><td>0.0</td></tr>
+                <tr><td>6</td><td>Sheikh Jaber Bridge</td><td>Kuwait City</td><td>Modern</td><td>2019</td><td>0.0</td></tr>
+                <tr><td>8</td><td>Museum of Modern Art</td><td>Salmiya Area</td><td>Art</td><td>1980</td><td>1.0</td></tr>
+                <tr><td>10</td><td>Grand Mosque</td><td>Kuwait City</td><td>Religious</td><td>1986</td><td>0.0</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function runCode() {
+            var code = document.getElementById('codeEditor').value.toUpperCase();
+            if (code.includes('DELETE') && code.includes('CATEGORY') && code.includes('CULTURAL')) {
+                document.getElementById('result-section').style.display = 'block';
+                alert('أحسنتِ! تم تنفيذ التعليمات البرمجية بنجاح.');
+                
+                // Prepare email link
+                var studentName = document.getElementById('studentName').value || 'متعلمة';
+                var studentClass = document.getElementById('studentClass').value || 'الحادي عشر';
+                var subject = encodeURIComponent('حل ورقة عمل 10 - ' + studentName + ' - ' + studentClass);
+                var body = encodeURIComponent('مرفق لكم ملف الـ PDF الخاص بحل ورقة عمل (10) للمتعلمة ' + studentName + ' من الصف ' + studentClass + '.\n\nالرجاء إرفاق ملف الـ PDF المحفوظ قبل الإرسال.');
+                
+                var mailtoLink = 'mailto:?subject=' + subject + '&body=' + body;
+                var emailBtn = document.getElementById('emailLink');
+                emailBtn.href = mailtoLink;
+                emailBtn.style.display = 'inline-block';
+                
+            } else {
+                alert('رجاءً التأكد من كتابة تعليمة الحذف (DELETE FROM) بشكل صحيح واستخدام الشرط المناسب.');
+            }
+        }
+    </script>
+</body>
+</html>
